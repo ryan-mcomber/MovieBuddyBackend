@@ -1,4 +1,4 @@
-package com.revature.profiles;
+package com.revature.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -14,7 +14,8 @@ public class DBConfiguration {
 	private String username;
 	private String password;
 	
-	@Profile("dev") // this correlates to spring.profiles.active 
+
+	@Profile("dev")
 	@Bean
 	public String devDatabaseConnection() {
 		System.out.println("DB connection for DEV - H2");
@@ -22,25 +23,22 @@ public class DBConfiguration {
 		System.out.println(url);
 		return "DB connection for DEV - H2";
 	}
-	
-	@Profile("test") // this correlates to spring.profiles.active 
+
+	@Profile("test")
 	@Bean
 	public String testDatabaseConnection() {
-		System.out.println("DB connection for TEST - low cost RDS instance");
+		System.out.println("DB Connection to RDS_TEST - Low Cost Instance");
 		System.out.println(driverClassName);
 		System.out.println(url);
-		return "DB connection for TEST - low cost RDS instance";
+		return "DB Connection to RDS_TEST - Low Cost Instance";
 	}
-	
-	@Profile("prod") // this correlates to spring.profiles.active 
+
+	@Profile("prod")
 	@Bean
 	public String prodDatabaseConnection() {
-		System.out.println("DB connection for PROD - high performance RDS instance");
+		System.out.println("DB Connection to RDS_PROD - High Performance Instance");
 		System.out.println(driverClassName);
 		System.out.println(url);
-		return "DB connection for PROD - high performance RDS instance";
-	}
-	
-	
-
+		return "DB Connection to RDS_PROD - High Performance Instance";
+	} 
 }
