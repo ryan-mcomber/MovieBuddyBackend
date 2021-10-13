@@ -11,7 +11,7 @@ public class RestApiApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(RestApiApplication.class, args);
 	}
-	
+	//PUSH TEST
 	// Set default welcome view to the index.html page src/main/resources/static when app loads
 	@RequestMapping("/")
 	public ModelAndView home()

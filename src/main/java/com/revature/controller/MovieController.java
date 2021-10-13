@@ -33,11 +33,11 @@ public class MovieController {
 		return ResponseEntity.ok(movieService.insert(movie_id, user_id));
 	}
 
-	@DeleteMapping("/{id}")
-	public void deleteMovie(@PathVariable("id") int id) {
-
-		movieService.remove(id);
-
-	}
+//	@DeleteMapping("/{id}")
+//	public void deleteMovie(@PathVariable("id") int id) {
+//
+//		movieService.remove(id);
+//
+//	}
 
 }

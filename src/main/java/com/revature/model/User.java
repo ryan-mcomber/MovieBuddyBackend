@@ -30,9 +30,7 @@ import lombok.NoArgsConstructor;
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @Entity
 @Table(name = "users") // schema = "moviebuddy"
-@Data
 @NoArgsConstructor
-@AllArgsConstructor
 public class User {
 
 	@Id

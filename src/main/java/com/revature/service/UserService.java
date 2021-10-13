@@ -65,10 +65,10 @@ public class UserService {
 	 */
 	@Transactional(propagation=Propagation.REQUIRES_NEW)
 	public User insert(User u) {
-
-		if (u.getAddresses() != null) {
-			u.getAddresses().forEach(a -> addressDAO.save(a));
-		}
+//
+//		if (u.getAddresses() != null) {
+//			u.getAddresses().forEach(a -> addressDAO.save(a));
+//		}
 
 		return userDAO.save(u);
 	}
