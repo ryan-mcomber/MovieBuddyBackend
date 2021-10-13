@@ -52,15 +52,16 @@ public class MovieResource { // all external api calls go here
 	public int getRecommendationId(int user_id) {
 		Session ses = HibernateUtil.getSessionFactory().openSession();
 		String genre = getMostPopularGenre(user_id);
-		String str = "SELECT id\r\n"
+		String str = "SELECT tmdb_id\r\n"
 				+ "FROM com.revature.model.Movie\r\n"
 				+ "WHERE user_id = "+user_id+ " AND genre = '"+genre+"'";
 		Query q = ses.createQuery(str);
 		List results = q.list();
-
+		
 		if (ses != null && ses.isOpen()) {
             ses.close();
         }
+		
 		Random r = new Random();
 		int index = r.nextInt(results.size());
 		return (int) results.get(index);

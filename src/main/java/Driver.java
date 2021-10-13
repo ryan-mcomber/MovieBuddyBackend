@@ -12,7 +12,12 @@ public class Driver {
 	
 	public static void main(String[] args) {
 		MovieResource m = new MovieResource();
-		System.out.println(m.getRecommendationId(1));
+		System.out.println(m.getRecommendationId(2));
+		System.out.println(m.getRecommendationId(2));
+		System.out.println(m.getRecommendationId(2));
+		System.out.println(m.getRecommendationId(2));
+		System.out.println(m.getRecommendationId(2));
+		System.out.println(m.getRecommendationId(2));
 		
 				
 	}
