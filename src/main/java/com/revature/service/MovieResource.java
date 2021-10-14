@@ -4,11 +4,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
-
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.configurationprocessor.json.JSONArray;
+import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.web.client.RestTemplate;
 import com.revature.model.Movie;
@@ -17,12 +18,12 @@ import com.revature.util.HibernateUtil;
 public class MovieResource { // all external api calls go here
 	
 	@Value("${api.key}") // from application.properties
-	private String apiKey;
+	private String apiKey = "093c734f042b18166bbf417d9a8701e6";
 
 	@Autowired
 	private RestTemplate restTemplate;
 
-	public Set<Movie> searchByTitle(String query) { // this may change to Jackson ObjectMapper
+	public Set<Movie> searchByTitle(String query) { // no longer necessary?
 		JSONObject obj = (JSONObject) restTemplate.getForObject(
 				"https://api.themoviedb.org/3/search/movie?api_key=" + apiKey
 				+ "&language=en-US&page=1&include_adult=false&query=" + query,
@@ -38,16 +39,28 @@ public class MovieResource { // all external api calls go here
 		return results;
 	}
 	
-	public Movie findById(int tmdb_id) { // may be easier than extracting from above set
-		JSONObject obj = (JSONObject) restTemplate.getForObject(
-		"https://api.themoviedb.org/3/movie/" + tmdb_id + "?api_key=" + apiKey + "&language=en-US",
-		JSONObject.class);
+	public Movie findById(int tmdb_id) throws JSONException {
+		RestTemplate restTemplate = new RestTemplate();
+		String result = restTemplate.getForObject(
+		"https://api.themoviedb.org/3/movie/550?api_key=" + apiKey + "&language=en-US",
+		String.class);
+		
+		JSONObject obj = new JSONObject(result);
 		
 		Movie m = new Movie();
-//		m.setParam(obj.getParam);
-//		m.setParam(obj.getParam);
+		m.setTmdb_id(tmdb_id);
+		m.setTitle(obj.getString("title"));
+		String year = (obj.getString("release_date"));
+		m.setYear(Integer.parseInt(year.substring(0, 4)));
+		JSONArray arr = obj.getJSONArray("genres");
+		m.setGenre_id(arr.getJSONObject(0).getInt("id"));
+		m.setGenre(arr.getJSONObject(0).getString("name"));
+		m.setRating(obj.getDouble("vote_average"));
+		m.setImg("http://image.tmdb.org/t/p/w92" + obj.getString("poster_path") + "?api_key=" + apiKey);
+		m.setDescription(obj.getString("overview"));
 		return m;
 	}
+	
 	//returns id of the movie used to get recommendations in the frontend. 
 	public int getRecommendationId(int user_id) {
 		Session ses = HibernateUtil.getSessionFactory().openSession();
