@@ -55,12 +55,6 @@ public class Movie {
 		this.description = description;
 	}
 
-
-	public Movie() {
-		// TODO Auto-generated constructor stub
-	}
-
-
 	public int getId() {
 		return id;
 	}

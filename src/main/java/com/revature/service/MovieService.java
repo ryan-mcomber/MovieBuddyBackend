@@ -1,6 +1,8 @@
 package com.revature.service;
 
 import java.util.Set;
+
+import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.configurationprocessor.json.JSONException;
@@ -10,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.revature.model.Movie;
 import com.revature.repositories.MovieDAO;
+import com.revature.util.HibernateUtil;
 
 @Service
 public class MovieService {
@@ -22,9 +25,12 @@ public class MovieService {
 
 	@Transactional(propagation=Propagation.REQUIRES_NEW)
 	public boolean insert(int tmdb_id, int user_id) throws JSONException { // add movie to user list
+		Session ses = HibernateUtil.getSessionFactory().openSession();
 		Movie m = movieResource.findById(tmdb_id);
 		m.setUser_id(user_id);
-		mdao.save(m);
+		System.out.println(m);
+		ses.save(m);
+		ses.close();
 		return true;
 	}
 	
