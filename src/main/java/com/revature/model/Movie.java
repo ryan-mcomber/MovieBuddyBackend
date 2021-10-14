@@ -36,6 +36,7 @@ public class Movie {
 	int genre_id; // useful for other calls?
 	double rating; // based on "vote_average"
 	String img; // points to FQDN + "poster_path" url concatenated with apikey
+	@Column(length = 1000)
 	String description; // from json "overview"
 	
 

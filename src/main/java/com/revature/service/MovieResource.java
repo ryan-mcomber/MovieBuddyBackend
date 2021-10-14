@@ -11,10 +11,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.configurationprocessor.json.JSONArray;
 import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.boot.configurationprocessor.json.JSONObject;
+import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import com.revature.model.Movie;
 import com.revature.util.HibernateUtil;
 
+@Service
 public class MovieResource { // all external api calls go here
 	
 	@Value("${api.key}") // from application.properties
@@ -23,26 +25,25 @@ public class MovieResource { // all external api calls go here
 	@Autowired
 	private RestTemplate restTemplate;
 
-	public Set<Movie> searchByTitle(String query) { // no longer necessary?
-		JSONObject obj = (JSONObject) restTemplate.getForObject(
-				"https://api.themoviedb.org/3/search/movie?api_key=" + apiKey
-				+ "&language=en-US&page=1&include_adult=false&query=" + query,
-				JSONObject.class);
-		
-		Set<Movie> results = new HashSet<>(); // move this parsing method down below?
-//		obj.keys().forEachRemaining(key -> {
-//				Movie m = new Movie();
-//				m.setParam(obj.getParam);
-//				m.setParam(obj.getParam);
-//				results.add(m);
-//		}
-		return results;
-	}
+//	public Set<Movie> searchByTitle(String query) { // no longer necessary?
+//		JSONObject obj = (JSONObject) restTemplate.getForObject(
+//				"https://api.themoviedb.org/3/search/movie?api_key=" + apiKey
+//				+ "&language=en-US&page=1&include_adult=false&query=" + query,
+//				JSONObject.class);
+//		
+//		Set<Movie> results = new HashSet<>(); // move this parsing method down below?
+////		obj.keys().forEachRemaining(key -> {
+////				Movie m = new Movie();
+////				m.setParam(obj.getParam);
+////				m.setParam(obj.getParam);
+////				results.add(m);
+////		}
+//		return results;
+//	}
 	
 	public Movie findById(int tmdb_id) throws JSONException {
-		RestTemplate restTemplate = new RestTemplate();
 		String result = restTemplate.getForObject(
-		"https://api.themoviedb.org/3/movie/550?api_key=" + apiKey + "&language=en-US",
+		"https://api.themoviedb.org/3/movie/" + tmdb_id + "?api_key=" + apiKey + "&language=en-US",
 		String.class);
 		
 		JSONObject obj = new JSONObject(result);
@@ -65,15 +66,16 @@ public class MovieResource { // all external api calls go here
 	public int getRecommendationId(int user_id) {
 		Session ses = HibernateUtil.getSessionFactory().openSession();
 		String genre = getMostPopularGenre(user_id);
-		String str = "SELECT id\r\n"
+		String str = "SELECT tmdb_id\r\n"
 				+ "FROM com.revature.model.Movie\r\n"
 				+ "WHERE user_id = "+user_id+ " AND genre = '"+genre+"'";
 		Query q = ses.createQuery(str);
 		List results = q.list();
-
+		
 		if (ses != null && ses.isOpen()) {
             ses.close();
         }
+		
 		Random r = new Random();
 		int index = r.nextInt(results.size());
 		return (int) results.get(index);

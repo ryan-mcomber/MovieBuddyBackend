@@ -3,6 +3,7 @@ package com.revature.controller;
 import java.util.Set;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -28,7 +29,7 @@ public class MovieController {
 
 	// insert
 	@PostMapping("/add/{user-id}&{movie-id}") // http://localhost:5000/api/movies/add
-	public ResponseEntity<Boolean> insert(@PathVariable("user-id") int user_id, @PathVariable("movie-id") int movie_id) {
+	public ResponseEntity<Boolean> insert(@PathVariable("user-id") int user_id, @PathVariable("movie-id") int movie_id) throws JSONException {
 
 		return ResponseEntity.ok(movieService.insert(movie_id, user_id));
 	}

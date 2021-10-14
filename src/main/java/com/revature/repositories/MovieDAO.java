@@ -10,8 +10,8 @@ import com.revature.model.Movie;
 @Repository
 public interface MovieDAO extends JpaRepository<Movie, Integer> {
 	
-	public Set<Movie> getUserList(int uid);
-	
-	public boolean deleteById(int id);
+//	public Set<Movie> getUserList(int uid);
+//	
+//	public boolean deleteById(int id);
 
 }
