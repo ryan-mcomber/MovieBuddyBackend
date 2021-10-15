@@ -1,5 +1,6 @@
 package com.revature.service;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
@@ -64,7 +65,7 @@ public class MovieResource { // all external api calls go here
 
 	// returns id of the movie used to get recommendations in the frontend.
 	public int getRecommendationId(int user_id) {
-		List results = null;
+		List results = new ArrayList();
 		try (Session ses = HibernateUtil.getSessionFactory().openSession()) {
 			String genre = getMostPopularGenre(user_id);
 			String str = "SELECT tmdb_id\r\n" + "FROM com.revature.model.Movie\r\n" + "WHERE user_id = " + user_id
@@ -83,7 +84,7 @@ public class MovieResource { // all external api calls go here
 
 	// returns the genre-id
 	public static String getMostPopularGenre(int user_id) {
-		List results = null;
+		List results = new ArrayList();
 		try (Session ses = HibernateUtil.getSessionFactory().openSession()) {
 			String str = "SELECT genre\r\n" + "FROM com.revature.model.Movie \r\n" + "WHERE user_id = " + user_id
 					+ "\r\n" + "GROUP BY genre \r\n" + "ORDER BY count(genre) DESC\r\n";
@@ -98,7 +99,7 @@ public class MovieResource { // all external api calls go here
 	}
 
 	public static List<Integer> getBuddyByGenre(String genre) {
-		List results = null;
+		List results = new ArrayList();
 		try (Session ses = HibernateUtil.getSessionFactory().openSession()) {
 			String str = "SELECT genre\r\n" + "FROM com.revature.model.Movie \r\n" + "WHERE genre = " + genre + "\r\n"
 					+ "GROUP BY user_id \r\n" + "ORDER BY count(user_id) DESC\r\n";
