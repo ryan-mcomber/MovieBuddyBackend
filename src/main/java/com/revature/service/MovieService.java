@@ -37,6 +37,9 @@ public class MovieService {
 
 		return true;
 	}
+	
+	public int getRecommendMovieId(int user_id) {
+		return movieResource.getRecommendationId(user_id);	}
 
 //	public Set<Movie> findByUserId(int uid) { // return the user's movie list
 //		return mdao.getUserList(uid);
