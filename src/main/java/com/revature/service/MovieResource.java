@@ -98,5 +98,20 @@ public class MovieResource { // all external api calls go here
 		return (String) results.get(0);
 		
 	}
+	
+	public static List<Integer> getBuddyByGenre(String genre) {
+		Session ses = HibernateUtil.getSessionFactory().openSession();
+		String str = "SELECT genre\r\n"
+				+ "FROM com.revature.model.Movie \r\n"
+				+ "WHERE genre = "+ genre +"\r\n"
+				+ "GROUP BY user_id \r\n"
+				+ "ORDER BY count(user_id) DESC\r\n";
+		Query q = ses.createQuery(str);
+		List results = q.list();
+		if (ses != null && ses.isOpen()) {
+            ses.close();
+        }
+		return results;
+	}
 
 }
