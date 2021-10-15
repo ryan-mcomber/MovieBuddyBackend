@@ -18,9 +18,10 @@ public class BuddyResource {
 		List<User> Buddies = new ArrayList<User>();
 		List<Integer> BuddyId = new ArrayList<Integer>();
 		
-		String genre = MovieResource.getMostPopularGenre(you.getId()); 
-		BuddyId = MovieResource.getBuddyByGenre(genre);
-		for (int i = 0; i< BuddyId.size(); i++) {
+		String genre = MovieResource.getMostPopularGenre(you.getId()); //get your most popular genre
+		BuddyId = MovieResource.getBuddyByGenre(genre); //find all users who have something from your genre in the database
+		
+		for (int i = 0; i< BuddyId.size(); i++) { //Iterate through BuddyId
 			if(you.getId() != BuddyId.get(i)) {//Discluding the user
 				Buddies.add(userService.findById(BuddyId.get(i))); //Get the full user object and add it to the buddies list
 			}
