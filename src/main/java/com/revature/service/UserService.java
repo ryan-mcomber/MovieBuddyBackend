@@ -48,16 +48,22 @@ public class UserService {
 	@Transactional(readOnly=true)
 	public User findByUsername(String username) {
 		List results = new ArrayList();
+		List results2 = new ArrayList();
 		try (Session ses = HibernateUtil.getSessionFactory().openSession()) {
 			String str = "SELECT password FROM com.revature.model.User WHERE username = '"+username+"'";
 			Query q = ses.createQuery(str);
 			results = q.list();
+			str = "SELECT id FROM com.revature.model.User WHERE username = '"+username+"'";
+			q = ses.createQuery(str);
+			results2 = q.list();
+			
 			System.out.println(q.getQueryString());
 		} catch (javax.persistence.PersistenceException ex) {
 			ex.printStackTrace();
 		}
 		try {
 			User u = new User();
+			u.setId((Integer) results2.get(0));
 			u.setPassword((String) results.get(0));
 			u.setUsername(username);
 			return u;
