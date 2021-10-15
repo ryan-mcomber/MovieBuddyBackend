@@ -1,8 +1,12 @@
 package com.revature.service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.hibernate.Session;
+import org.hibernate.query.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +19,7 @@ import com.revature.model.Address;
 import com.revature.model.User;
 import com.revature.repositories.AddressDAO;
 import com.revature.repositories.UserDAO;
+import com.revature.util.HibernateUtil;
 
 @Service
 public class UserService {
@@ -42,8 +47,23 @@ public class UserService {
 
 	@Transactional(readOnly=true)
 	public User findByUsername(String username) {
-		return userDAO.findByUsername(username)
-				.orElseThrow(() -> new UserNotFoundException("No user found with username " + username));
+		List results = new ArrayList();
+		try (Session ses = HibernateUtil.getSessionFactory().openSession()) {
+			String str = "SELECT password FROM com.revature.model.User WHERE username = '"+username+"'";
+			Query q = ses.createQuery(str);
+			results = q.list();
+			System.out.println(q.getQueryString());
+		} catch (javax.persistence.PersistenceException ex) {
+			ex.printStackTrace();
+		}
+		try {
+			User u = new User();
+			u.setPassword((String) results.get(0));
+			u.setUsername(username);
+			return u;
+		} catch(Exception e) {
+			throw new UserNotFoundException("No user found with username " + username);
+		}
 	}
 
 	@Transactional(readOnly=true)
@@ -65,12 +85,16 @@ public class UserService {
 	 */
 	@Transactional(propagation=Propagation.REQUIRES_NEW)
 	public User insert(User u) {
-//
-//		if (u.getAddresses() != null) {
-//			u.getAddresses().forEach(a -> addressDAO.save(a));
-//		}
+		try (Session ses = HibernateUtil.getSessionFactory().openSession()) {
+			ses.save(u);
+			ses.close();
+			}catch (javax.persistence.PersistenceException ex) {
+				ex.printStackTrace();
+			}
+			System.out.println(u);
+			return u;
+			
 
-		return userDAO.save(u);
 	}
 	
 	@Transactional(propagation=Propagation.REQUIRED) // this is the default setting for all transactional annotations.

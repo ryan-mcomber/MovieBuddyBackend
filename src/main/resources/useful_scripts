@@ -3,7 +3,10 @@ INSERT INTO public.movies
 VALUES('', 'thriller', 0, '', 0, '',7, 2, 0);
 
 SELECT * FROM movies;
+SELECT * FROM users;
+DELETE FROM users WHERE user_id = 2;
 DELETE FROM movies WHERE movie_id = 3;
+SELECT username from users WHERE username = 'testy';
 
 SELECT genre
 FROM movies 

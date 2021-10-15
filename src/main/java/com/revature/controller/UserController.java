@@ -33,7 +33,7 @@ public class UserController {
 	}
 	
 	// find by username /{username} use @pathvariable as your parameter
-	@GetMapping("find/{username}")
+	@GetMapping("/find/{username}")
 	public ResponseEntity<User> findByUsername(@PathVariable("username") String username) {
 		return ResponseEntity.ok(userService.findByUsername(username));
 	}
