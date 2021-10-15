@@ -16,9 +16,11 @@
 	<description>Demo project for DevOps Pipeline</description>
 	<properties>
 		<java.version>1.8</java.version>
-		<sonar.organization>sophiagavrila</sonar.organization>
-		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
+		<sonar.organization>ryan-mcomber</sonar.organization>
+  		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
 	</properties>
+  		
+	
 	<dependencies>
 
 		<!-- API Documentation Dependency -->
