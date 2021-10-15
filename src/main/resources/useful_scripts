@@ -1,8 +1,9 @@
 INSERT INTO public.movies
 (description, genre, genre_id, img, rating, title, tmdb_id, user_id, "year")
-VALUES('', 'thriller', 0, '', 0, '', 0, 1, 0);
+VALUES('', 'thriller', 0, '', 0, '',7, 2, 0);
 
 SELECT * FROM movies;
+DELETE FROM movies WHERE movie_id = 3;
 
 SELECT genre
 FROM movies 
@@ -10,3 +11,8 @@ WHERE user_id = 1
 GROUP BY genre 
 ORDER BY count(genre) DESC
 LIMIT 1;
+
+
+SELECT movie_id
+FROM movies
+WHERE user_id = 1 AND genre = 'horror';

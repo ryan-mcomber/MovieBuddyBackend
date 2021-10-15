@@ -18,7 +18,7 @@ import com.revature.util.HibernateUtil;
 
 @Service
 public class MovieResource { // all external api calls go here
-	
+
 	@Value("${api.key}") // from application.properties
 	private String apiKey = "093c734f042b18166bbf417d9a8701e6";
 
@@ -40,14 +40,14 @@ public class MovieResource { // all external api calls go here
 ////		}
 //		return results;
 //	}
-	
+
 	public Movie findById(int tmdb_id) throws JSONException {
 		String result = restTemplate.getForObject(
-		"https://api.themoviedb.org/3/movie/" + tmdb_id + "?api_key=" + apiKey + "&language=en-US",
-		String.class);
-		
+				"https://api.themoviedb.org/3/movie/" + tmdb_id + "?api_key=" + apiKey + "&language=en-US",
+				String.class);
+
 		JSONObject obj = new JSONObject(result);
-		
+
 		Movie m = new Movie();
 		m.setTmdb_id(tmdb_id);
 		m.setTitle(obj.getString("title"));
@@ -61,56 +61,52 @@ public class MovieResource { // all external api calls go here
 		m.setDescription(obj.getString("overview"));
 		return m;
 	}
-	
-	//returns id of the movie used to get recommendations in the frontend. 
+
+	// returns id of the movie used to get recommendations in the frontend.
 	public int getRecommendationId(int user_id) {
-		Session ses = HibernateUtil.getSessionFactory().openSession();
-		String genre = getMostPopularGenre(user_id);
-		String str = "SELECT tmdb_id\r\n"
-				+ "FROM com.revature.model.Movie\r\n"
-				+ "WHERE user_id = "+user_id+ " AND genre = '"+genre+"'";
-		Query q = ses.createQuery(str);
-		List results = q.list();
-		
-		if (ses != null && ses.isOpen()) {
-            ses.close();
-        }
-		
+		List results = null;
+		try (Session ses = HibernateUtil.getSessionFactory().openSession()) {
+			String genre = getMostPopularGenre(user_id);
+			String str = "SELECT tmdb_id\r\n" + "FROM com.revature.model.Movie\r\n" + "WHERE user_id = " + user_id
+					+ " AND genre = '" + genre + "'";
+			Query q = ses.createQuery(str);
+			results = q.list();
+		} catch (javax.persistence.PersistenceException ex) {
+			ex.printStackTrace();
+		}
+
 		Random r = new Random();
 		int index = r.nextInt(results.size());
 		return (int) results.get(index);
-		
+
 	}
-	
-	//returns the genre-id 
+
+	// returns the genre-id
 	public static String getMostPopularGenre(int user_id) {
-		Session ses = HibernateUtil.getSessionFactory().openSession();
-		String str = "SELECT genre\r\n"
-				+ "FROM com.revature.model.Movie \r\n"
-				+ "WHERE user_id = "+user_id+"\r\n"
-				+ "GROUP BY genre \r\n"
-				+ "ORDER BY count(genre) DESC\r\n";
-		Query q = ses.createQuery(str);
-		List results = q.list();
-		if (ses != null && ses.isOpen()) {
-            ses.close();
-        }
+		List results = null;
+		try (Session ses = HibernateUtil.getSessionFactory().openSession()) {
+			String str = "SELECT genre\r\n" + "FROM com.revature.model.Movie \r\n" + "WHERE user_id = " + user_id
+					+ "\r\n" + "GROUP BY genre \r\n" + "ORDER BY count(genre) DESC\r\n";
+			Query q = ses.createQuery(str);
+			results = q.list();
+		} catch (javax.persistence.PersistenceException ex) {
+			ex.printStackTrace();
+		}
+
 		return (String) results.get(0);
-		
+
 	}
-	
+
 	public static List<Integer> getBuddyByGenre(String genre) {
-		Session ses = HibernateUtil.getSessionFactory().openSession();
-		String str = "SELECT genre\r\n"
-				+ "FROM com.revature.model.Movie \r\n"
-				+ "WHERE genre = "+ genre +"\r\n"
-				+ "GROUP BY user_id \r\n"
-				+ "ORDER BY count(user_id) DESC\r\n";
-		Query q = ses.createQuery(str);
-		List results = q.list();
-		if (ses != null && ses.isOpen()) {
-            ses.close();
-        }
+		List results = null;
+		try (Session ses = HibernateUtil.getSessionFactory().openSession()) {
+			String str = "SELECT genre\r\n" + "FROM com.revature.model.Movie \r\n" + "WHERE genre = " + genre + "\r\n"
+					+ "GROUP BY user_id \r\n" + "ORDER BY count(user_id) DESC\r\n";
+			Query q = ses.createQuery(str);
+			results = q.list();
+		} catch (javax.persistence.PersistenceException ex) {
+			ex.printStackTrace();
+		}
 		return results;
 	}
 

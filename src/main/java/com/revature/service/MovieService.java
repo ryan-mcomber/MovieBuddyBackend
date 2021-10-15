@@ -16,24 +16,28 @@ import com.revature.util.HibernateUtil;
 
 @Service
 public class MovieService {
-	
+
 	@Autowired
 	private MovieDAO mdao;
-	
+
 	@Autowired
 	private MovieResource movieResource;
 
-	@Transactional(propagation=Propagation.REQUIRES_NEW)
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public boolean insert(int tmdb_id, int user_id) throws JSONException { // add movie to user list
-		Session ses = HibernateUtil.getSessionFactory().openSession();
-		Movie m = movieResource.findById(tmdb_id);
-		m.setUser_id(user_id);
-		System.out.println(m);
-		ses.save(m);
-		ses.close();
+		try (Session ses = HibernateUtil.getSessionFactory().openSession()) {
+			Movie m = movieResource.findById(tmdb_id);
+			m.setUser_id(user_id);
+			System.out.println(m);
+			ses.save(m);
+			ses.close();
+		} catch (javax.persistence.PersistenceException ex) {
+			ex.printStackTrace();
+		}
+
 		return true;
 	}
-	
+
 //	public Set<Movie> findByUserId(int uid) { // return the user's movie list
 //		return mdao.getUserList(uid);
 //	}
