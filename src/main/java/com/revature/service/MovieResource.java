@@ -71,7 +71,7 @@ public class MovieResource { // all external api calls go here
 					+ " AND genre = '" + genre + "'";
 			Query q = ses.createQuery(str);
 			results = q.list();
-		} catch (javax.persistence.PersistenceException ex) {
+		} catch (javax.persistence.PersistenceException|NullPointerException ex) {
 			ex.printStackTrace();
 		}
 
@@ -89,7 +89,7 @@ public class MovieResource { // all external api calls go here
 					+ "\r\n" + "GROUP BY genre \r\n" + "ORDER BY count(genre) DESC\r\n";
 			Query q = ses.createQuery(str);
 			results = q.list();
-		} catch (javax.persistence.PersistenceException ex) {
+		} catch (javax.persistence.PersistenceException|NullPointerException ex) {
 			ex.printStackTrace();
 		}
 
@@ -104,7 +104,7 @@ public class MovieResource { // all external api calls go here
 					+ "GROUP BY user_id \r\n" + "ORDER BY count(user_id) DESC\r\n";
 			Query q = ses.createQuery(str);
 			results = q.list();
-		} catch (javax.persistence.PersistenceException ex) {
+		} catch (javax.persistence.PersistenceException|NullPointerException ex) {
 			ex.printStackTrace();
 		}
 		return results;
