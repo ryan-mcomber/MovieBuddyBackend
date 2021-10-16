@@ -82,7 +82,7 @@ public class MovieResource { // all external api calls go here
 	public List<Movie> getMovieList(int user_id) {
 		List<Movie> movieList = new ArrayList<>();
 		try (Session ses = HibernateUtil.getSessionFactory().openSession()) {
-			String str = "SELECT * FROM com.revature.model.Movie\r\n" + "WHERE user_id = " + user_id;
+			String str = "SELECT title,img,id FROM com.revature.model.Movie\r\n" + "WHERE user_id = " + user_id;
 			Query q = ses.createQuery(str);
 			movieList = q.list();
 		} catch (javax.persistence.PersistenceException | NullPointerException ex) {

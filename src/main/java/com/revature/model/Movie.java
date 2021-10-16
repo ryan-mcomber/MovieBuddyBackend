@@ -55,8 +55,8 @@ public class Movie {
 		this.description = description;
 	}
 	
-	// no args constructor
-	public Movie () {}
+//	// no args constructor
+//	public Movie () {}
 
 	public int getId() {
 		return id;
