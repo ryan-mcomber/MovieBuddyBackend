@@ -29,7 +29,7 @@ public class MovieController {
 	public MovieService movieService;
 
 	// search
-	@PostMapping("/find/{title}") // http://localhost:5000/api/movies/find/<title>
+	@GetMapping("/find/{title}") // http://localhost:5000/api/movies/find/<title>
 	public ResponseEntity<List<Movie>> search(@PathVariable("title") String title)
 			throws JSONException {
 		return ResponseEntity.ok(movieService.searchByTitle(title));
