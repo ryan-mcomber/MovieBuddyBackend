@@ -53,9 +53,6 @@ public class MovieService {
 		return movieResource.searchByTitle(title);
 	}
 	
-	public List<Movie> getMovieList(int user_id){
-		return movieResource.getMovieList(user_id);
-	}
 //	public Set<Movie> findByUserId(int uid) { // return the user's movie list
 //		return mdao.getUserList(uid);
 //	}

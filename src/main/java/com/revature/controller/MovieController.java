@@ -51,10 +51,7 @@ public class MovieController {
 	public ResponseEntity<List<Movie>> recommended(@PathVariable("movie-id") int movie_id) throws JSONException {
 		return ResponseEntity.ok(movieService.getMovieRecommendations(movie_id));
 	}
-	@GetMapping("/list/{user-id}")// http://localhost:5000/api/movies/list
-	public ResponseEntity<List<Movie>> movieList(@PathVariable("user-id") int user_id) throws JSONException {
-		return ResponseEntity.ok(movieService.getMovieList(user_id));
-	}
+
 //	@DeleteMapping("/{id}")
 //	public void deleteMovie(@PathVariable("id") int id) {
 //
