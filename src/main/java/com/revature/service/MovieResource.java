@@ -78,6 +78,18 @@ public class MovieResource { // all external api calls go here
 		m.setDescription(obj.getString("overview"));
 		return m;
 	}
+	
+	public List<Movie> getMovieList(int user_id) {
+		List<Movie> movieList = new ArrayList<>();
+		try (Session ses = HibernateUtil.getSessionFactory().openSession()) {
+			String str = "SELECT title,img,id FROM com.revature.model.Movie\r\n" + "WHERE user_id = " + user_id;
+			Query q = ses.createQuery(str);
+			movieList = q.list();
+		} catch (javax.persistence.PersistenceException | NullPointerException ex) {
+			ex.printStackTrace();
+		}
+		return movieList;
+	}
 
 	public List<Movie> getMovieRecommendations(int user_id) {
 		int movie_id = getRecommendationId(user_id);
@@ -113,7 +125,7 @@ public class MovieResource { // all external api calls go here
 
 	// returns id of the movie used to get recommendations in the frontend.
 	public Integer getRecommendationId(int user_id) {
-		List results = new ArrayList();
+		List results = new ArrayList<>();
 		try (Session ses = HibernateUtil.getSessionFactory().openSession()) {
 			String genre = getMostPopularGenre(user_id);
 			String str = "SELECT tmdb_id\r\n" + "FROM com.revature.model.Movie\r\n" + "WHERE user_id = " + user_id
