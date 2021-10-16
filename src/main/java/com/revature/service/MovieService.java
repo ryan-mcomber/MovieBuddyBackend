@@ -39,7 +39,7 @@ public class MovieService {
 		return true;
 	}
 	
-	public Movie getRecommendMovieId(int user_id) {
+	public Integer getRecommendMovieId(int user_id) {
 		return movieResource.getRecommendationId(user_id);	}
 	public List<Movie> getMovieRecommendations(int movie_id){
 		return movieResource.getMovieRecommendations(movie_id);

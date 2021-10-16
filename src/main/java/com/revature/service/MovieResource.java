@@ -65,7 +65,8 @@ public class MovieResource { // all external api calls go here
 		return m;
 	}
 	
-public List<Movie> getMovieRecommendations(int movie_id){
+public List<Movie> getMovieRecommendations(int user_id){
+	int movie_id = getRecommendationId(user_id);
 	String result = restTemplate.getForObject(
 			"https://api.themoviedb.org/3/movie/"+movie_id+"/recommendations?api_key=4e03597f829ab368d49ae4a8f0769033&language=en-US",
 			String.class);
@@ -99,7 +100,7 @@ public List<Movie> getMovieRecommendations(int movie_id){
 	}
 
 	// returns id of the movie used to get recommendations in the frontend.
-	public Movie getRecommendationId(int user_id) {
+	public Integer getRecommendationId(int user_id) {
 		List results = new ArrayList();
 		try (Session ses = HibernateUtil.getSessionFactory().openSession()) {
 			String genre = getMostPopularGenre(user_id);
@@ -113,9 +114,7 @@ public List<Movie> getMovieRecommendations(int movie_id){
 
 		Random r = new Random();
 		int index = r.nextInt(results.size());
-		Movie m = new Movie();
-		m.setTmdb_id((int) results.get(index));
-		return m;
+		return (int) results.get(index); 
 
 	}
 
