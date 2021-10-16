@@ -1,5 +1,6 @@
 package com.revature.service;
 
+import java.util.List;
 import java.util.Set;
 
 import org.hibernate.Session;
@@ -40,7 +41,9 @@ public class MovieService {
 	
 	public int getRecommendMovieId(int user_id) {
 		return movieResource.getRecommendationId(user_id);	}
-
+	public List<Movie> getMovieRecommendations(int movie_id){
+		return movieResource.getMovieRecommendations(movie_id);
+	}
 //	public Set<Movie> findByUserId(int uid) { // return the user's movie list
 //		return mdao.getUserList(uid);
 //	}

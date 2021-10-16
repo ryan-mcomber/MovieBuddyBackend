@@ -1,8 +1,10 @@
 package com.revature.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 import org.hibernate.Session;
@@ -62,6 +64,39 @@ public class MovieResource { // all external api calls go here
 		m.setDescription(obj.getString("overview"));
 		return m;
 	}
+	
+public List<Movie> getMovieRecommendations(int movie_id){
+	String result = restTemplate.getForObject(
+			"https://api.themoviedb.org/3/movie/"+movie_id+"/recommendations?api_key=4e03597f829ab368d49ae4a8f0769033&language=en-US",
+			String.class);
+	System.out.println(result);
+	List<Movie> movies = new ArrayList<>();
+	try {
+		
+		JSONArray movieArray = new JSONObject(result).getJSONArray("results");
+		for(int n = 0; n < movieArray.length(); n++)
+		{	
+			JSONObject obj = movieArray.getJSONObject(n);
+			Movie m = new Movie();
+			m.setTmdb_id(obj.getInt("id"));
+			m.setTitle(obj.getString("title"));
+			String year = (obj.getString("release_date"));
+			m.setYear(Integer.parseInt(year.substring(0, 4)));
+			JSONArray arr = obj.getJSONArray("genre_ids");
+			m.setGenre_id(arr.getInt(0));
+			m.setGenre(parseGenreID(arr.getInt(0)));
+			m.setRating(obj.getDouble("vote_average"));
+			m.setImg("http://image.tmdb.org/t/p/w92" + obj.getString("poster_path") + "?api_key=" + apiKey);
+			m.setDescription(obj.getString("overview"));
+			movies.add(m);
+		}
+	} catch (JSONException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	System.out.println(movies);
+	return movies;
+	}
 
 	// returns id of the movie used to get recommendations in the frontend.
 	public int getRecommendationId(int user_id) {
@@ -97,6 +132,8 @@ public class MovieResource { // all external api calls go here
 		return (String) results.get(0);
 
 	}
+	
+	
 
 	public static List<Integer> getBuddyByGenre(String genre) {
 		List results = new ArrayList();
@@ -109,6 +146,32 @@ public class MovieResource { // all external api calls go here
 			ex.printStackTrace();
 		}
 		return results;
+	}
+	
+	public String parseGenreID(int id) {
+		Map<Integer, String> genreMap  = new HashMap<Integer, String>() {{
+		    put(28, "Action");
+		    put(12, "Adventure");
+		    put(16, "Animation");
+		    put(35, "Comedy");
+		    put(99, "Documentary");
+		    put(80, "Crime");
+		    put(18, "Drama");
+		    put(10751, "Family");
+		    put(14, "Fantasy");
+		    put(36, "History");
+		    put(27, "Horror");
+		    put(10402, "Music");
+		    put(9648, "Mystery");
+		    put(10749, "Romance");
+		    put(878, "Science Fiction");
+		    put(10770, "TV Movie");
+		    put(53, "Thriller");
+		    put(10752, "War");
+		    put(37, "Western"); 
+		}};
+		return genreMap.get(id);
+		
 	}
 
 }

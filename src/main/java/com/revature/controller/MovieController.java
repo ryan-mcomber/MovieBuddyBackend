@@ -1,5 +1,6 @@
 package com.revature.controller;
 
+import java.util.List;
 import java.util.Set;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,8 +34,12 @@ public class MovieController {
 		return ResponseEntity.ok(movieService.insert(movie_id, user_id));
 	}
 	@GetMapping("/recommend/{user-id}")// http://localhost:5000/api/movies/recommend
-	public ResponseEntity<Integer> insert(@PathVariable("user-id") int user_id) throws JSONException {
+	public ResponseEntity<Integer> recommend(@PathVariable("user-id") int user_id) throws JSONException {
 		return ResponseEntity.ok(movieService.getRecommendMovieId(user_id));
+	}
+	@GetMapping("/recommended/{movie-id}")// http://localhost:5000/api/movies/recommend
+	public ResponseEntity<List<Movie>> recommended(@PathVariable("movie-id") int movie_id) throws JSONException {
+		return ResponseEntity.ok(movieService.getMovieRecommendations(movie_id));
 	}
 //	@DeleteMapping("/{id}")
 //	public void deleteMovie(@PathVariable("id") int id) {
