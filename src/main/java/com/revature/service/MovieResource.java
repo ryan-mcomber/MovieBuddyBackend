@@ -117,6 +117,17 @@ public List<Movie> getMovieRecommendations(int user_id){
 		return (int) results.get(index); 
 
 	}
+	public List<Movie> getMovieList(int user_id) {
+		List<Movie> movieList = new ArrayList();
+		try (Session ses = HibernateUtil.getSessionFactory().openSession()) {
+			String str = "SELECT tmdb_id\r\n" + "FROM com.revature.model.Movie\r\n" + "WHERE user_id = " + user_id;
+			Query q = ses.createQuery(str);
+			movieList = q.list();
+		} catch (javax.persistence.PersistenceException | NullPointerException ex) {
+			ex.printStackTrace();
+		}
+		return movieList;
+	}
 
 	// returns the genre-id
 	public static String getMostPopularGenre(int user_id) {
