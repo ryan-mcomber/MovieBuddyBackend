@@ -28,21 +28,35 @@ public class MovieResource { // all external api calls go here
 	@Autowired
 	private RestTemplate restTemplate;
 
-//	public Set<Movie> searchByTitle(String query) { // no longer necessary?
-//		JSONObject obj = (JSONObject) restTemplate.getForObject(
-//				"https://api.themoviedb.org/3/search/movie?api_key=" + apiKey
-//				+ "&language=en-US&page=1&include_adult=false&query=" + query,
-//				JSONObject.class);
-//		
-//		Set<Movie> results = new HashSet<>(); // move this parsing method down below?
-////		obj.keys().forEachRemaining(key -> {
-////				Movie m = new Movie();
-////				m.setParam(obj.getParam);
-////				m.setParam(obj.getParam);
-////				results.add(m);
-////		}
-//		return results;
-//	}
+	public List<Movie> searchByTitle(String title) {
+		String result = restTemplate.getForObject("https://api.themoviedb.org/3/search/movie?api_key=" 
+	+ apiKey + "&language=en-US&include_adult=false&query=" + title, String.class);
+		System.out.println(result);
+		List<Movie> movies = new ArrayList<>();
+		try {
+
+			JSONArray movieArray = new JSONObject(result).getJSONArray("results");
+			for (int n = 0; n < movieArray.length(); n++) {
+				JSONObject obj = movieArray.getJSONObject(n);
+				Movie m = new Movie();
+				m.setTmdb_id(obj.getInt("id"));
+				m.setTitle(obj.getString("title"));
+				String year = (obj.getString("release_date"));
+				m.setYear(Integer.parseInt(year.substring(0, 4)));
+				JSONArray arr = obj.getJSONArray("genre_ids");
+				m.setGenre(parseGenreID(arr.getInt(0)));
+				m.setRating(obj.getDouble("vote_average"));
+				m.setImg("http://image.tmdb.org/t/p/w92" + obj.getString("poster_path") + "?api_key=" + apiKey);
+				m.setDescription(obj.getString("overview"));
+				movies.add(m);
+			}
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		System.out.println(movies);
+		return movies;
+	}
 
 	public Movie findById(int tmdb_id) throws JSONException {
 		String result = restTemplate.getForObject(
@@ -64,39 +78,37 @@ public class MovieResource { // all external api calls go here
 		m.setDescription(obj.getString("overview"));
 		return m;
 	}
-	
-public List<Movie> getMovieRecommendations(int user_id){
-	int movie_id = getRecommendationId(user_id);
-	String result = restTemplate.getForObject(
-			"https://api.themoviedb.org/3/movie/"+movie_id+"/recommendations?api_key=4e03597f829ab368d49ae4a8f0769033&language=en-US",
-			String.class);
-	System.out.println(result);
-	List<Movie> movies = new ArrayList<>();
-	try {
-		
-		JSONArray movieArray = new JSONObject(result).getJSONArray("results");
-		for(int n = 0; n < movieArray.length(); n++)
-		{	
-			JSONObject obj = movieArray.getJSONObject(n);
-			Movie m = new Movie();
-			m.setTmdb_id(obj.getInt("id"));
-			m.setTitle(obj.getString("title"));
-			String year = (obj.getString("release_date"));
-			m.setYear(Integer.parseInt(year.substring(0, 4)));
-			JSONArray arr = obj.getJSONArray("genre_ids");
-			m.setGenre_id(arr.getInt(0));
-			m.setGenre(parseGenreID(arr.getInt(0)));
-			m.setRating(obj.getDouble("vote_average"));
-			m.setImg("http://image.tmdb.org/t/p/w92" + obj.getString("poster_path") + "?api_key=" + apiKey);
-			m.setDescription(obj.getString("overview"));
-			movies.add(m);
+
+	public List<Movie> getMovieRecommendations(int user_id) {
+		int movie_id = getRecommendationId(user_id);
+		String result = restTemplate.getForObject("https://api.themoviedb.org/3/movie/" + movie_id
+				+ "/recommendations?api_key=4e03597f829ab368d49ae4a8f0769033&language=en-US", String.class);
+		System.out.println(result);
+		List<Movie> movies = new ArrayList<>();
+		try {
+
+			JSONArray movieArray = new JSONObject(result).getJSONArray("results");
+			for (int n = 0; n < movieArray.length(); n++) {
+				JSONObject obj = movieArray.getJSONObject(n);
+				Movie m = new Movie();
+				m.setTmdb_id(obj.getInt("id"));
+				m.setTitle(obj.getString("title"));
+				String year = (obj.getString("release_date"));
+				m.setYear(Integer.parseInt(year.substring(0, 4)));
+				JSONArray arr = obj.getJSONArray("genre_ids");
+				m.setGenre_id(arr.getInt(0));
+				m.setGenre(parseGenreID(arr.getInt(0)));
+				m.setRating(obj.getDouble("vote_average"));
+				m.setImg("http://image.tmdb.org/t/p/w92" + obj.getString("poster_path") + "?api_key=" + apiKey);
+				m.setDescription(obj.getString("overview"));
+				movies.add(m);
+			}
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-	} catch (JSONException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}
-	System.out.println(movies);
-	return movies;
+		System.out.println(movies);
+		return movies;
 	}
 
 	// returns id of the movie used to get recommendations in the frontend.
@@ -108,13 +120,13 @@ public List<Movie> getMovieRecommendations(int user_id){
 					+ " AND genre = '" + genre + "'";
 			Query q = ses.createQuery(str);
 			results = q.list();
-		} catch (javax.persistence.PersistenceException|NullPointerException ex) {
+		} catch (javax.persistence.PersistenceException | NullPointerException ex) {
 			ex.printStackTrace();
 		}
 
 		Random r = new Random();
 		int index = r.nextInt(results.size());
-		return (int) results.get(index); 
+		return (int) results.get(index);
 
 	}
 	public List<Movie> getMovieList(int user_id) {
@@ -137,15 +149,13 @@ public List<Movie> getMovieRecommendations(int user_id){
 					+ "\r\n" + "GROUP BY genre \r\n" + "ORDER BY count(genre) DESC\r\n";
 			Query q = ses.createQuery(str);
 			results = q.list();
-		} catch (javax.persistence.PersistenceException|NullPointerException ex) {
+		} catch (javax.persistence.PersistenceException | NullPointerException ex) {
 			ex.printStackTrace();
 		}
 
 		return (String) results.get(0);
 
 	}
-	
-	
 
 	public static List<Integer> getBuddyByGenre(String genre) {
 		List results = new ArrayList();
@@ -154,36 +164,38 @@ public List<Movie> getMovieRecommendations(int user_id){
 					+ "GROUP BY user_id \r\n" + "ORDER BY count(user_id) DESC\r\n";
 			Query q = ses.createQuery(str);
 			results = q.list();
-		} catch (javax.persistence.PersistenceException|NullPointerException ex) {
+		} catch (javax.persistence.PersistenceException | NullPointerException ex) {
 			ex.printStackTrace();
 		}
 		return results;
 	}
-	
+
 	public String parseGenreID(int id) {
-		Map<Integer, String> genreMap  = new HashMap<Integer, String>() {{
-		    put(28, "Action");
-		    put(12, "Adventure");
-		    put(16, "Animation");
-		    put(35, "Comedy");
-		    put(99, "Documentary");
-		    put(80, "Crime");
-		    put(18, "Drama");
-		    put(10751, "Family");
-		    put(14, "Fantasy");
-		    put(36, "History");
-		    put(27, "Horror");
-		    put(10402, "Music");
-		    put(9648, "Mystery");
-		    put(10749, "Romance");
-		    put(878, "Science Fiction");
-		    put(10770, "TV Movie");
-		    put(53, "Thriller");
-		    put(10752, "War");
-		    put(37, "Western"); 
-		}};
+		Map<Integer, String> genreMap = new HashMap<Integer, String>() {
+			{
+				put(28, "Action");
+				put(12, "Adventure");
+				put(16, "Animation");
+				put(35, "Comedy");
+				put(99, "Documentary");
+				put(80, "Crime");
+				put(18, "Drama");
+				put(10751, "Family");
+				put(14, "Fantasy");
+				put(36, "History");
+				put(27, "Horror");
+				put(10402, "Music");
+				put(9648, "Mystery");
+				put(10749, "Romance");
+				put(878, "Science Fiction");
+				put(10770, "TV Movie");
+				put(53, "Thriller");
+				put(10752, "War");
+				put(37, "Western");
+			}
+		};
 		return genreMap.get(id);
-		
+
 	}
 
 }

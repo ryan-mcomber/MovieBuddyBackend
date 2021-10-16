@@ -28,6 +28,13 @@ public class MovieController {
 	@Autowired
 	public MovieService movieService;
 
+	// search
+	@PostMapping("/find/{title}") // http://localhost:5000/api/movies/find/<title>
+	public ResponseEntity<List<Movie>> search(@PathVariable("title") String title)
+			throws JSONException {
+		return ResponseEntity.ok(movieService.searchByTitle(title));
+	}
+	
 	// insert
 	@PostMapping("/add/{user-id}&{movie-id}") // http://localhost:5000/api/movies/add
 	public ResponseEntity<Boolean> insert(@PathVariable("user-id") int user_id, @PathVariable("movie-id") int movie_id) throws JSONException {

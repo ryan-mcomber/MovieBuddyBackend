@@ -40,9 +40,14 @@ public class MovieService {
 	}
 	
 	public Integer getRecommendMovieId(int user_id) {
-		return movieResource.getRecommendationId(user_id);	}
-	public List<Movie> getMovieRecommendations(int movie_id){
+		return movieResource.getRecommendationId(user_id);
+	}
+	public List<Movie> getMovieRecommendations(int movie_id) {
 		return movieResource.getMovieRecommendations(movie_id);
+	}
+	
+	public List<Movie> searchByTitle(String title) {
+		return movieResource.searchByTitle(title);
 	}
 //	public Set<Movie> findByUserId(int uid) { // return the user's movie list
 //		return mdao.getUserList(uid);
