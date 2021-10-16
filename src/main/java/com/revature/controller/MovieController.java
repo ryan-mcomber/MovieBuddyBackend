@@ -34,11 +34,14 @@ public class MovieController {
 			throws JSONException {
 		return ResponseEntity.ok(movieService.searchByTitle(title));
 	}
-	
 	// insert
 	@PostMapping("/add/{user-id}&{movie-id}") // http://localhost:5000/api/movies/add
 	public ResponseEntity<Boolean> insert(@PathVariable("user-id") int user_id, @PathVariable("movie-id") int movie_id) throws JSONException {
 		return ResponseEntity.ok(movieService.insert(movie_id, user_id));
+	}
+	@GetMapping("/list/{user-id}")// http://localhost:5000/api/movies/list
+	public ResponseEntity<List<Movie>> movieList(@PathVariable("user-id") int user_id) throws JSONException {
+		return ResponseEntity.ok(movieService.getMovieList(user_id));
 	}
 	@GetMapping("/recommend/{user-id}")// http://localhost:5000/api/movies/recommend
 	public ResponseEntity<Integer> recommend(@PathVariable("user-id") int user_id) throws JSONException {
