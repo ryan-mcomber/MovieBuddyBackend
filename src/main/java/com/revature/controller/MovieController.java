@@ -34,7 +34,7 @@ public class MovieController {
 		return ResponseEntity.ok(movieService.insert(movie_id, user_id));
 	}
 	@GetMapping("/recommend/{user-id}")// http://localhost:5000/api/movies/recommend
-	public ResponseEntity<Integer> recommend(@PathVariable("user-id") int user_id) throws JSONException {
+	public ResponseEntity<Movie> recommend(@PathVariable("user-id") int user_id) throws JSONException {
 		return ResponseEntity.ok(movieService.getRecommendMovieId(user_id));
 	}
 	@GetMapping("/recommended/{movie-id}")// http://localhost:5000/api/movies/recommend

@@ -99,7 +99,7 @@ public List<Movie> getMovieRecommendations(int movie_id){
 	}
 
 	// returns id of the movie used to get recommendations in the frontend.
-	public int getRecommendationId(int user_id) {
+	public Movie getRecommendationId(int user_id) {
 		List results = new ArrayList();
 		try (Session ses = HibernateUtil.getSessionFactory().openSession()) {
 			String genre = getMostPopularGenre(user_id);
@@ -113,7 +113,9 @@ public List<Movie> getMovieRecommendations(int movie_id){
 
 		Random r = new Random();
 		int index = r.nextInt(results.size());
-		return (int) results.get(index);
+		Movie m = new Movie();
+		m.setTmdb_id((int) results.get(index));
+		return m;
 
 	}
 
