@@ -51,6 +51,7 @@ public class MovieController {
 	public ResponseEntity<List<Movie>> recommended(@PathVariable("movie-id") int movie_id) throws JSONException {
 		return ResponseEntity.ok(movieService.getMovieRecommendations(movie_id));
 	}
+
 //	@DeleteMapping("/{id}")
 //	public void deleteMovie(@PathVariable("id") int id) {
 //
