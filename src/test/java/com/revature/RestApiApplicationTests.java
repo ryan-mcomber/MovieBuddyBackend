@@ -19,13 +19,16 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.web.client.HttpClientErrorException;
 
 import com.revature.model.Movie;
+import com.revature.model.User;
 import com.revature.service.MovieResource;
 import com.revature.service.MovieService;
+import com.revature.service.UserService;
 
 @SpringBootTest
 class RestApiApplicationTests {
 	MovieService ms = new MovieService();
 	MovieResource mr = new MovieResource();
+	UserService us = new UserService();
 
 	@Test
 	void contextLoads() {
@@ -77,5 +80,9 @@ class RestApiApplicationTests {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	@Test
+	void findByUsernameTest() {
+		assertEquals(us.findByUsername("1").toString(),"User [id=1, firstName=null, lastName=null, username=1, password=1, email=null, addresses=null]");
 	}
 }
