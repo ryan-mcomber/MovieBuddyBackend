@@ -54,9 +54,6 @@ public class Movie {
 		this.img = img;
 		this.description = description;
 	}
-	
-//	// no args constructor
-//	public Movie () {}
 
 	public int getId() {
 		return id;

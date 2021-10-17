@@ -34,6 +34,7 @@ public class MovieService {
 			ses.close();
 		} catch (javax.persistence.PersistenceException ex) {
 			ex.printStackTrace();
+			return false;
 		}
 
 		return true;

@@ -35,7 +35,7 @@ public class MovieController {
 		return ResponseEntity.ok(movieService.searchByTitle(title));
 	}
 	// insert
-	@PostMapping("/add/{user-id}&{movie-id}") // http://localhost:5000/api/movies/add
+	@GetMapping("/add/{user-id}&{movie-id}") // http://localhost:5000/api/movies/add
 	public ResponseEntity<Boolean> insert(@PathVariable("user-id") int user_id, @PathVariable("movie-id") int movie_id) throws JSONException {
 		return ResponseEntity.ok(movieService.insert(movie_id, user_id));
 	}
