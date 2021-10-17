@@ -26,7 +26,7 @@ public class MovieResource { // all external api calls go here
 	private String apiKey = "093c734f042b18166bbf417d9a8701e6";
 
 	@Autowired
-	private RestTemplate restTemplate;
+	private RestTemplate restTemplate = new RestTemplate();
 
 	public List<Movie> searchByTitle(String title) {
 		String result = restTemplate.getForObject("https://api.themoviedb.org/3/search/movie?api_key=" 
@@ -175,18 +175,18 @@ public class MovieResource { // all external api calls go here
 
 	}
 
-	public static List<Integer> getBuddyByGenre(String genre) {
-		List results = new ArrayList();
-		try (Session ses = HibernateUtil.getSessionFactory().openSession()) {
-			String str = "SELECT genre\r\n" + "FROM com.revature.model.Movie \r\n" + "WHERE genre = " + genre + "\r\n"
-					+ "GROUP BY user_id \r\n" + "ORDER BY count(user_id) DESC\r\n";
-			Query q = ses.createQuery(str);
-			results = q.list();
-		} catch (javax.persistence.PersistenceException | NullPointerException ex) {
-			ex.printStackTrace();
-		}
-		return results;
-	}
+//	public static List<Integer> getBuddyByGenre(String genre) {
+//		List results = new ArrayList();
+//		try (Session ses = HibernateUtil.getSessionFactory().openSession()) {
+//			String str = "SELECT genre\r\n" + "FROM com.revature.model.Movie \r\n" + "WHERE genre = " + genre + "\r\n"
+//					+ "GROUP BY user_id \r\n" + "ORDER BY count(user_id) DESC\r\n";
+//			Query q = ses.createQuery(str);
+//			results = q.list();
+//		} catch (javax.persistence.PersistenceException | NullPointerException ex) {
+//			ex.printStackTrace();
+//		}
+//		return results;
+//	}
 
 	public String parseGenreID(int id) {
 		Map<Integer, String> genreMap = new HashMap<Integer, String>() {

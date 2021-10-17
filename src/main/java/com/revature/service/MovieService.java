@@ -22,14 +22,14 @@ public class MovieService {
 	private MovieDAO mdao;
 
 	@Autowired
-	private MovieResource movieResource;
+	private MovieResource movieResource = new MovieResource();
 
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public boolean insert(int tmdb_id, int user_id) throws JSONException { // add movie to user list
 		try (Session ses = HibernateUtil.getSessionFactory().openSession()) {
 			Movie m = movieResource.findById(tmdb_id);
 			m.setUser_id(user_id);
-			System.out.println(m);
+//			System.out.println(m);
 			ses.save(m);
 			ses.close();
 		} catch (javax.persistence.PersistenceException ex) {
