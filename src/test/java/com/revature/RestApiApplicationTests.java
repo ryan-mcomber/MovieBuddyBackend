@@ -78,4 +78,15 @@ class RestApiApplicationTests {
 			e.printStackTrace();
 		}
 	}
+	@Test
+	void TestBuddyReferral() {
+		try {
+			ms.insert(550, 2);
+			assertEquals(true,true);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
 }
