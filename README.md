@@ -1,6 +1,8 @@
 # MovieBuddy
 The Movie Buddy app will leverage the power of the RESTful “The Movie Database API” to make for a fun way to track your taste in movies. The app will allow users to register, login, select favourite movies and genres. After a portfolio has been made to reflect the user’s taste, the app will recommend new movies to watch as well as other users with which they can connect, based on a comparison of both user’s tastes in movies. Our goal with this app is to provide an engaging user experience while leveraging both front end and back end technologies that we have learned about throughout our Revature training.
 
+Link to frontend repository: https://github.com/yassineelbaamrani/Movie-Buddy-FrontEnd
+
 
 
 
