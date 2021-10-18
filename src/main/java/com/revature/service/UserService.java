@@ -44,6 +44,18 @@ public class UserService {
 	public Set<User> findAll() {
 		return userDAO.findAll().stream().collect(Collectors.toSet());
 	}
+	
+	@Transactional(readOnly=true)
+	public User findById(int id) {
+
+		return userDAO.findById(id);
+	}
+	
+	// we want to make sure that this method may only READ from the DB
+	@Transactional(readOnly=true)
+	public User getById(int id) {
+		return userDAO.getById(id);
+	}
 
 	@Transactional(readOnly=true)
 	public User findByUsername(String username) {
@@ -71,17 +83,31 @@ public class UserService {
 			throw new UserNotFoundException("No user found with username " + username);
 		}
 	}
-
-	@Transactional(readOnly=true)
-	public User findById(int id) {
-
-		return userDAO.findById(id);
-	}
 	
-	// we want to make sure that this method may only READ from the DB
 	@Transactional(readOnly=true)
-	public User getById(int id) {
-		return userDAO.getById(id);
+	public static User getUsernameById(int id) {
+		List results = new ArrayList();
+		List results2 = new ArrayList();
+		try (Session ses = HibernateUtil.getSessionFactory().openSession()) {
+			String str = "SELECT password FROM com.revature.model.User WHERE user_id = " + id;
+			Query q = ses.createQuery(str);
+			results = q.list();
+			str = "SELECT username FROM com.revature.model.User WHERE user_id = " + id;
+			q = ses.createQuery(str);
+			results2 = q.list();
+			System.out.println(q.getQueryString());
+		} catch (javax.persistence.PersistenceException ex) {
+			ex.printStackTrace();
+		}
+		try {
+			User u = new User();
+			u.setUsername((String) results2.get(0));
+			u.setPassword((String) results.get(0));
+			u.setId(id);
+			return u;
+		} catch(Exception e) {
+			throw new UserNotFoundException("No user found with user ID " + id);
+		}
 	}
 
 	/**

@@ -3,6 +3,7 @@ package com.revature.service;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -177,15 +178,39 @@ public class MovieResource { // all external api calls go here
 
 	public static List<Integer> getBuddyByGenre(String genre) {
 		List results = new ArrayList();
+		List finalReturn = new ArrayList();
 		try (Session ses = HibernateUtil.getSessionFactory().openSession()) {
-			String str = "SELECT genre\r\n" + "FROM com.revature.model.Movie \r\n" + "WHERE genre = " + genre + "\r\n"
-					+ "GROUP BY user_id \r\n" + "ORDER BY count(user_id) DESC\r\n";
+			String str = "SELECT user_id FROM com.revature.model.Movie WHERE genre = \'" + genre + "\' ORDER BY user_id DESC";
 			Query q = ses.createQuery(str);
-			results = q.list();
+			results = q.list(); //Returns all the user ID entries. Need to sort by most entries and condense into a single entry, sorted by frequency
+			if (results.size() != 0) {//If not no entries
+				Map<Integer, Integer> entryCondenser = new HashMap<Integer, Integer>();
+				for(int i=0; i<results.size(); i++) {//Create map. Find number of entries and map them to the ID
+					if(entryCondenser.containsKey(results.get(i))) {//If not new key, add
+						entryCondenser.put((Integer)results.get(i), entryCondenser.get(results.get(i))+1);
+					}else {//If new key, create
+						entryCondenser.put((Integer)results.get(i), 1);
+					}
+				}
+				while (entryCondenser.size() > 0){
+					int max = 0;
+					int maxKey = 0;
+					for (Map.Entry<Integer, Integer> entry : entryCondenser.entrySet()) {//Iterate through the map
+						if (Integer.valueOf(entry.getValue())> max) {//if you find the new biggest integer, note the value and key
+							max = Integer.valueOf((entry.getValue()));
+							maxKey = Integer.valueOf((entry.getKey()));
+						}
+					}
+					//Found max, now add to final list and remove from map.
+					finalReturn.add(maxKey);
+					entryCondenser.remove(maxKey);
+				}
+			}
+						
 		} catch (javax.persistence.PersistenceException | NullPointerException ex) {
 			ex.printStackTrace();
 		}
-		return results;
+		return finalReturn;
 	}
 
 	public String parseGenreID(int id) {

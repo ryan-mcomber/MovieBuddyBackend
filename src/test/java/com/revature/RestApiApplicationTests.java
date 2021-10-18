@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.not;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -19,13 +20,18 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.web.client.HttpClientErrorException;
 
 import com.revature.model.Movie;
+import com.revature.model.User;
+import com.revature.service.BuddyResource;
 import com.revature.service.MovieResource;
 import com.revature.service.MovieService;
+import com.revature.service.UserService;
 
 @SpringBootTest
 class RestApiApplicationTests {
 	MovieService ms = new MovieService();
 	MovieResource mr = new MovieResource();
+	BuddyResource br = new BuddyResource();
+	UserService us = new UserService();
 
 	@Test
 	void contextLoads() {
@@ -82,7 +88,9 @@ class RestApiApplicationTests {
 	void TestBuddyReferral() {
 		try {
 			ms.insert(550, 2);
-			assertEquals(true,true);
+			User u = new User("test2", "test2", "test2", "test2", "test2@mail.com");
+			u.setId(2);
+			assertNotNull(br.FindBuddy(u));
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
